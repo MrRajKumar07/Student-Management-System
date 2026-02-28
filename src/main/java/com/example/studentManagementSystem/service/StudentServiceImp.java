@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class StudentServiceImp implements StudentService{
 
-//	@Autowired
+//  @Autowired
 //	StudentRepository studentRepo;
 	
 	private final StudentRepository studentRepo;
