@@ -37,19 +37,24 @@ public class StudentServiceImp implements StudentService{
 
 	@Override
 	public void deleteStudent(Long id) {
+		if(!studentRepo.existsById(id)){
+			throw new RuntimeException("Student Not Found With id :"+id);
+		}
+		studentRepo.deleteById(id);
 		// TODO Auto-generated method stub
 	}
 
 	@Override
 	public Student getStudentById(Long id) {
+		return studentRepo.findById(id)
+				.orElseThrow(() -> new RuntimeException("Student not found with id: "+ id));
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override
 	public List<Student> getAllStudent() {
+		return studentRepo.findAll();
 		// TODO Auto-generated method stub
-		return null;
 	}
 
 }
