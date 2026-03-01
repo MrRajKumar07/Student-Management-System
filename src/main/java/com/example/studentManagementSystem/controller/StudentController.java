@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.studentManagementSystem.dto.StudentDTO;
 import com.example.studentManagementSystem.model.Student;
 import com.example.studentManagementSystem.service.StudentService;
 
@@ -22,12 +23,9 @@ import lombok.RequiredArgsConstructor;
 @RequestMapping("/api/student")
 public class StudentController {
 
-	
-	//Field Based 
 //	@Autowired
 //	StudentService studentService;
-	
-	//Constructor Based
+
 	private final StudentService studentService;
 	
 	@GetMapping()
@@ -36,13 +34,13 @@ public class StudentController {
 	}
 	
 	@PostMapping("/save")
-	public Student addStudent(@RequestBody Student student) {
-		return studentService.createStudent(student);
+	public StudentDTO addStudent(@RequestBody StudentDTO studentDTO) {
+		return studentService.createStudent(studentDTO);
 	}
 	
 	@PutMapping("/{id}")
-	public Student updateStudent(@PathVariable("id") Long id, @RequestBody Student student) {
-		return studentService.updateStudent(id, student);
+	public StudentDTO updateStudent(@PathVariable("id") Long id, @RequestBody StudentDTO studentDTO) {
+		return studentService.updateStudent(id, studentDTO);
 	}
 
 	@DeleteMapping("/delete/{id}")
@@ -51,12 +49,12 @@ public class StudentController {
 	}
 	
 	@GetMapping("/{id}")
-	public Student getStudentById(@PathVariable("id") Long id) {
+	public StudentDTO getStudentById(@PathVariable("id") Long id) {
 		return studentService.getStudentById(id);
 	}
 	
 	@GetMapping("/all")
-    public List<Student> getAllStudent() {
+    public List<StudentDTO> getAllStudent() {
     	return studentService.getAllStudent();
     }
 }
