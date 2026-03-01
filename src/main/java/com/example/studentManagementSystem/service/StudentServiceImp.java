@@ -1,10 +1,11 @@
 package com.example.studentManagementSystem.service;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.studentManagementSystem.dto.StudentDTO;
+import com.example.studentManagementSystem.mapper.StudentMapper;
 import com.example.studentManagementSystem.model.Student;
 import com.example.studentManagementSystem.repository.StudentRepository;
 
@@ -18,21 +19,27 @@ public class StudentServiceImp implements StudentService{
 //	StudentRepository studentRepo;
 	
 	private final StudentRepository studentRepo;
+	
+	private final StudentMapper studentMapper;
 
-	@Override
-	public Student createStudent(Student student) {
-		return studentRepo.save(student);
+    @Override
+	public StudentDTO createStudent(StudentDTO studentDTO) {
+    	Student student = studentMapper.toEntity(studentDTO);
+    	Student saveStudent = studentRepo.save(student);
+    	return studentMapper.toDTO(saveStudent);
 	}
-
-	@Override
-	public Student updateStudent(Long id, Student studentDetails) {
-		Student student = studentRepo.findById(id).orElseThrow(()->new RuntimeException("Student Not Found With id :"+id));
-		student.setName(studentDetails.getName());
-		student.setEmail(studentDetails.getEmail());
-		student.setPhone(studentDetails.getPhone());
-		student.setDepartment(studentDetails.getDepartment());
+    
+    @Override
+	public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
+		Student student = studentRepo.findById(id)
+				.orElseThrow(()->new RuntimeException("Student Not Found With id :"+id));
 		
-		return studentRepo.save(student);
+		student.setName(studentDTO.getName());
+		student.setEmail(studentDTO.getEmail());
+		student.setPhone(studentDTO.getPhone());
+		student.setDepartment(studentDTO.getDepartment());
+		
+		return studentMapper.toDTO(studentRepo.save(student));
 	}
 
 	@Override
@@ -42,16 +49,22 @@ public class StudentServiceImp implements StudentService{
 		}
 		studentRepo.deleteById(id);
 	}
+	
+	@Override
+	public StudentDTO getStudentById(Long id) {
+			return studentRepo.findById(id)
+					.map(studentMapper::toDTO)
+					.orElseThrow(() -> new RuntimeException("Student not found with id: "+ id));
+	}
+	
 
 	@Override
-	public Student getStudentById(Long id) {
-		return studentRepo.findById(id)
-				.orElseThrow(() -> new RuntimeException("Student not found with id: "+ id));
+	public List<StudentDTO> getAllStudent() {
+		return studentRepo.findAll().stream()
+				.map(studentMapper::toDTO)
+				.toList();
+				
 	}
 
-	@Override
-	public List<Student> getAllStudent() {
-		return studentRepo.findAll();
-	}
-
+	
 }
