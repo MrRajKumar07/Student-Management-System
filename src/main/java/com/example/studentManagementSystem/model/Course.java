@@ -29,3 +29,4 @@ public class Course {
         this.createdAt = LocalDateTime.now();
     }
 }
+
