@@ -1,10 +1,10 @@
 package com.example.studentManagementSystem.service;
 
 
+import com.example.studentManagementSystem.dto.EnrollmentDTO;
+import com.example.studentManagementSystem.mapper.EnrollmentMapper;
 import com.example.studentManagementSystem.model.Enrollment;
-import com.example.studentManagementSystem.model.*;
 import com.example.studentManagementSystem.repository.EnrollmentRepostitory;
-import com.example.studentManagementSystem.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,46 +15,41 @@ import java.util.List;
 public class EnrollmentServiceImp implements EnrollmentService {
 
     private final EnrollmentRepostitory enrollmentRepo;
-    private final StudentRepository studentRepo;
+    private final EnrollmentMapper enrollmentMapper;
     private static final Long DEFAULT_COURSE_ID = 1L;
 
 
     @Override
-    public Enrollment enrollStudent(Long studentId){
-
-        Student student = studentRepo.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));// 2️⃣ Validate course exists
-
-        // 3️⃣ Prevent duplicate enrollment
-        boolean alreadyEnrolled =
-                enrollmentRepo.existsByStudentIdAndCourseId(studentId, DEFAULT_COURSE_ID);
-
-        if (alreadyEnrolled) {
-            throw new RuntimeException("Student already enrolled in this course");
-        }
-
-        // 4️⃣ Create enrollment
-        Enrollment enrollment = new Enrollment();
-        enrollment.setStudentId(studentId);
+    public EnrollmentDTO enrollStudent(EnrollmentDTO enrollmentDTO){
+        Enrollment enrollment = enrollmentMapper.toEntity(enrollmentDTO);
         enrollment.setCourseId(DEFAULT_COURSE_ID);
-
-        return enrollmentRepo.save(enrollment);
-
-    }
-
-   
-
-    @Override
-    public void deleteEnrollment(Long id) {
-        if (!enrollmentRepo.existsById(id)) {
-            throw new RuntimeException("Enrollment not found");
-        }
-        enrollmentRepo.deleteById(id);
+        Enrollment savedEnrollment = enrollmentRepo.save(enrollment);
+        return enrollmentMapper.toDTO(savedEnrollment);
     }
 
     @Override
-    public List<Enrollment> getAllEnrollments() {
-        return enrollmentRepo.findAll();
+    public List<EnrollmentDTO> getEnrollmentByStudent(Long studentId) {
+        return enrollmentRepo.findById(studentId)
+                .stream()
+                .map(enrollmentMapper::toDTO)
+                .toList();
     }
 
+    @Override
+    public List<EnrollmentDTO> getEnrollmentByCourse(Long courseId){
+        return enrollmentRepo.findById(courseId)
+                .stream()
+                .map(enrollmentMapper::toDTO)
+                .toList();
+    }
+
+    @Override
+    public EnrollmentDTO updateEnrollmentStatus(Long id, String status) {
+        Enrollment enrollment = enrollmentRepo.findById(id).orElseThrow(() ->
+                new RuntimeException("Enrollment not found with id: " + id));
+
+        enrollment.setStatus(status);
+
+        return enrollmentMapper.toDTO(enrollmentRepo.save(enrollment));
+    }
 }

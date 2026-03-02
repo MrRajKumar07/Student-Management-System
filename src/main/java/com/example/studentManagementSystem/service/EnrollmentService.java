@@ -1,13 +1,17 @@
 package com.example.studentManagementSystem.service;
 
+import com.example.studentManagementSystem.dto.EnrollmentDTO;
 import com.example.studentManagementSystem.model.Enrollment;
 
 import java.util.List;
 
 public interface EnrollmentService {
-    Enrollment enrollStudent(Long studentId);
+    EnrollmentDTO enrollStudent(EnrollmentDTO enrollmentDTO);
 
-    void deleteEnrollment(Long id);
+    List<EnrollmentDTO> getEnrollmentByStudent(Long studentId);
 
-    List<Enrollment> getAllEnrollments();
+    List<EnrollmentDTO> getEnrollmentByCourse(Long courseId);
+
+    EnrollmentDTO updateEnrollmentStatus(Long id, String status);
+
 }

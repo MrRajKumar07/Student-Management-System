@@ -5,6 +5,5 @@ import com.example.studentManagementSystem.model.Enrollment;
 
 
 public interface EnrollmentRepostitory extends JpaRepository<Enrollment, Long> {
-    boolean existsByStudentIdAndCourseId(Long studentId, Long courseId);
 
 }
