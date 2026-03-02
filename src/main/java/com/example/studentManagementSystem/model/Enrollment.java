@@ -4,6 +4,7 @@ package com.example.studentManagementSystem.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Data
@@ -11,26 +12,45 @@ import java.time.LocalDateTime;
 @Table(name = "enrollments")
 public class Enrollment {
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "student_id", nullable = false)
-    private Student student;
+    private Long studentId;
 
-    @ManyToOne
-    @JoinColumn(name = "course_id", nullable = false)
-    private Course course;
+    private Long courseId;
+
+    private LocalDate enrollmentDate;
 
     private String status;
 
-    private LocalDateTime enrolledAt;
-
     @PrePersist
     protected void onCreate() {
-        this.enrolledAt = LocalDateTime.now();
-        this.status = "Active";
+        this.enrollmentDate = LocalDate.now();
+        this.status = "ACTIVE";
     }
+
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "student_id", nullable = false)
+//    private Student student;
+//
+//    @ManyToOne
+//    @JoinColumn(name = "course_id", nullable = false)
+//    private Course course;
+//
+//    private String status;
+//
+//    private LocalDateTime enrolledAt;
+//
+//    @PrePersist
+//    protected void onCreate() {
+//        this.enrolledAt = LocalDateTime.now();
+//        this.status = "Active";
+//    }
 
 }

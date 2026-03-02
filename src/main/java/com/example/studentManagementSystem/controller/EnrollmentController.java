@@ -19,7 +19,7 @@ public class EnrollmentController {
     @PostMapping
     public ResponseEntity<Enrollment> enrollStudent(
             @RequestBody EnrollmentRequestDTO request){
-        Enrollment enrollment = enrollmentService.enrollStudent(request.getStudentById().request.getCourseId());
+        Enrollment enrollment = enrollmentService.enrollStudent(request.getStudentId());
 
         return ResponseEntity.ok(enrollment);
     }

@@ -16,21 +16,18 @@ public class EnrollmentServiceImp implements EnrollmentService {
 
     private final EnrollmentRepostitory enrollmentRepo;
     private final StudentRepository studentRepo;
-    private final CourserRepository courseRepo;
+    private static final Long DEFAULT_COURSE_ID = 1L;
+
 
     @Override
-    public Enrollment enrollStudent(Long studentId, Long courseId){
+    public Enrollment enrollStudent(Long studentId){
 
         Student student = studentRepo.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student not found"));
-
-        // 2️⃣ Validate course exists
-        Course course = courseRepo.findById(courseId)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new RuntimeException("Student not found"));// 2️⃣ Validate course exists
 
         // 3️⃣ Prevent duplicate enrollment
-        boolean alreadyEnrolled = enrollmentRepo
-                .existsByStudentIdAndCourseId(studentId, courseId);
+        boolean alreadyEnrolled =
+                enrollmentRepo.existsByStudentIdAndCourseId(studentId, DEFAULT_COURSE_ID);
 
         if (alreadyEnrolled) {
             throw new RuntimeException("Student already enrolled in this course");
@@ -38,12 +35,14 @@ public class EnrollmentServiceImp implements EnrollmentService {
 
         // 4️⃣ Create enrollment
         Enrollment enrollment = new Enrollment();
-        enrollment.setStudent(student);
-        enrollment.setCourse(course);
+        enrollment.setStudentId(studentId);
+        enrollment.setCourseId(DEFAULT_COURSE_ID);
 
         return enrollmentRepo.save(enrollment);
 
     }
+
+   
 
     @Override
     public void deleteEnrollment(Long id) {
