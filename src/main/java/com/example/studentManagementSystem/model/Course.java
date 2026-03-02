@@ -3,6 +3,8 @@ package com.example.studentManagementSystem.model;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "courses")
 @Data
@@ -16,7 +18,14 @@ public class Course {
     private Long id;
 
     private String courseName;
-    private String courseCode;
-    private String instructor;
+    private String description;
     private Integer credits;
+    private String duration;
+
+    private LocalDateTime createdAt;
+
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }

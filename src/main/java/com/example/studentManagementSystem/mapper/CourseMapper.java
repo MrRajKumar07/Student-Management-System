@@ -11,9 +11,9 @@ public class CourseMapper {
         return CourseDTO.builder()
                 .id(course.getId())
                 .courseName(course.getCourseName())
-                .courseCode(course.getCourseCode())
-                .instructor(course.getInstructor())
+                .description(course.getDescription())
                 .credits(course.getCredits())
+                .duration(course.getDuration())
                 .build();
     }
 
@@ -21,9 +21,9 @@ public class CourseMapper {
         return Course.builder()
                 .id(dto.getId())
                 .courseName(dto.getCourseName())
-                .courseCode(dto.getCourseCode())
-                .instructor(dto.getInstructor())
+                .description(dto.getDescription())
                 .credits(dto.getCredits())
+                .duration(dto.getDuration())
                 .build();
     }
 }

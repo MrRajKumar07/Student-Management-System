@@ -1,17 +1,18 @@
 package com.example.studentManagementSystem.service;
 
 import com.example.studentManagementSystem.dto.CourseDTO;
+
 import java.util.List;
 
 public interface CourseService {
 
-    CourseDTO saveCourse(CourseDTO courseDTO);
+    CourseDTO createCourse(CourseDTO dto);
 
-    List<CourseDTO> getAllCourses();
+    CourseDTO updateCourse(Long id, CourseDTO dto);
+
+    void deleteCourse(Long id);
 
     CourseDTO getCourseById(Long id);
 
-    CourseDTO updateCourse(Long id, CourseDTO courseDTO);
-
-    void deleteCourse(Long id);
+    List<CourseDTO> getAllCourses();
 }

@@ -10,7 +10,7 @@ public class CourseDTO {
 
     private Long id;
     private String courseName;
-    private String courseCode;
-    private String instructor;
+    private String description;
     private Integer credits;
+    private String duration;
 }
