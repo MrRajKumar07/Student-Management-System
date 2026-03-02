@@ -2,23 +2,23 @@ package com.example.studentManagementSystem.service;
 
 import java.util.List;
 
-import com.example.studentManagementSystem.model.Student;
+import com.example.studentManagementSystem.dto.StudentDTO;
 
 public interface StudentService {
 
 	  //Save Student Data 
-      Student createStudent(Student student);
-      
+	  StudentDTO createStudent(StudentDTO studentDTO);
+	  
       //Update Student Data
-      Student updateStudent(Long id, Student student);
-      
+      StudentDTO updateStudent(Long id, StudentDTO studentDTO);
+	  
       //Delete Student
       void deleteStudent(Long id);
       
       //Search Student By Id
-      Student getStudentById(Long id);
+      StudentDTO getStudentById(Long id);
       
       //Get All Students
-      List<Student> getAllStudent();
+      List<StudentDTO> getAllStudent();
 }
     
