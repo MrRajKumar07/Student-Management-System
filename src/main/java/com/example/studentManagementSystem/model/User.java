@@ -14,11 +14,12 @@ public class User {
 	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    long id;
+    long id; 
     
     String username;
     String password;
     String email;
-    String role; 
-    long studentId; // nullable as per image
+    String role;
+    long studentId; 
+    
 }

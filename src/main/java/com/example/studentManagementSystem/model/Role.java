@@ -15,5 +15,5 @@ public class Role {
     @Id 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     long id;
-    String roleName;
+    String roleName;//Student & Admin 
 }
