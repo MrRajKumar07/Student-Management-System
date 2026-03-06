@@ -1,14 +1,14 @@
-
-
 package com.example.studentManagementSystem.controller;
 
 import com.example.studentManagementSystem.dto.CourseDTO;
 import com.example.studentManagementSystem.service.CourseService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.List;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -18,14 +18,14 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping
-    public CourseDTO createCourse(@RequestBody CourseDTO dto) {
+    public CourseDTO createCourse(@Valid @RequestBody CourseDTO dto) {
         return courseService.createCourse(dto);
     }
 
     @PutMapping("/{id}")
     public CourseDTO updateCourse(@PathVariable Long id,
-                                  @RequestBody CourseDTO courseDTO) {
-        return courseService.updateCourse(id, courseDTO);
+                                  @Valid @RequestBody CourseDTO dto) {
+        return courseService.updateCourse(id, dto);
     }
 
     @DeleteMapping("/{id}")
@@ -34,7 +34,7 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public CourseDTO getCourse(@PathVariable Long id) {
+    public CourseDTO getCourseById(@PathVariable Long id) {
         return courseService.getCourseById(id);
     }
 
