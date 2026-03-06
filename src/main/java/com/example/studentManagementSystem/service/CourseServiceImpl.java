@@ -2,6 +2,7 @@ package com.example.studentManagementSystem.service;
 
 import com.example.studentManagementSystem.service.CourseService;
 import com.example.studentManagementSystem.dto.CourseDTO;
+import com.example.studentManagementSystem.exception.ResourceNotFoundException;
 import com.example.studentManagementSystem.mapper.CourseMapper;
 import com.example.studentManagementSystem.model.Course;
 import com.example.studentManagementSystem.repository.CourseRepository;
@@ -34,7 +35,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseDTO updateCourse(Long id, CourseDTO dto) {
 
         Course existing = courseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
         existing.setCourseName(dto.getCourseName());
         existing.setDescription(dto.getDescription());
@@ -48,14 +49,17 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void deleteCourse(Long id) {
-        courseRepository.deleteById(id);
+    	if(!courseRepository.existsById(id)){
+			throw new ResourceNotFoundException("Course Not Found");
+		}
+    	courseRepository.deleteById(id);
     }
 
     @Override
     public CourseDTO getCourseById(Long id) {
 
         Course course = courseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Course not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
         return courseMapper.toDTO(course);
     }

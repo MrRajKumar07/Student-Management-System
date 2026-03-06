@@ -1,55 +1,54 @@
 package com.example.studentManagementSystem.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.example.studentManagementSystem.config.JwtUtil;
 import com.example.studentManagementSystem.dto.LoginDTO;
 import com.example.studentManagementSystem.dto.RegisterDTO;
+import com.example.studentManagementSystem.exception.ResourceNotFoundException;
+import com.example.studentManagementSystem.exception.UnauthorizedException;
 import com.example.studentManagementSystem.mapper.AuthMapper;
+import com.example.studentManagementSystem.model.Role;
 import com.example.studentManagementSystem.model.User;
 import com.example.studentManagementSystem.repository.RoleRepository;
 import com.example.studentManagementSystem.repository.UserRepository;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
 	
-    @Autowired 
-    private UserRepository userRepository;
-    
-    @Autowired 
-    private RoleRepository roleRepository;
-    
-    @Autowired 
-    private BCryptPasswordEncoder passwordEncoder;
-    
-    @Autowired 
-    private JwtUtil jwtUtil;
-    
-    @Autowired 
-    private AuthMapper authMapper;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final AuthMapper authMapper;
 
     @Override
     public String registerUser(RegisterDTO registerDTO) {
-    	
-    	//user save( username,password,email,roleName)
+        // Convert DTO to Entity using your manual mapper
         User user = authMapper.toEntity(registerDTO);
+        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
         
-        //Raj@1234 - qbhtsrdecg$fr%@bjlijfbjilvfil
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        // 2. Fetch the Role entity based on the String in DTO
+        Role role = roleRepository.findByRoleName(registerDTO.getRoleName())
+                .orElseThrow(() -> new ResourceNotFoundException("Role: " + registerDTO.getRoleName() + " does not exist"));
+        user.setRole(role);
+        
         userRepository.save(user);
-        return "User registered successfully";
+        return "User registered successfully with role " + registerDTO.getRoleName();
     }
 
     @Override
     public String loginUser(LoginDTO loginDTO) {
         User user = userRepository.findByUsername(loginDTO.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Invalid username"));
         
-        if(passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+        if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
             return jwtUtil.generateToken(user.getUsername());
         }
-        return "Invalid credentials";
+        throw new UnauthorizedException("Invalid password credentials");
     }
 }

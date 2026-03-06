@@ -6,6 +6,7 @@ import com.example.studentManagementSystem.model.Enrollment;
 import java.util.List;
 
 public interface EnrollmentService {
+	
     EnrollmentDTO enrollStudent(EnrollmentDTO enrollmentDTO);
 
     List<EnrollmentDTO> getEnrollmentByStudent(Long studentId);

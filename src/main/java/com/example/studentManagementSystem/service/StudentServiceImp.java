@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.studentManagementSystem.dto.StudentDTO;
+import com.example.studentManagementSystem.exception.ResourceNotFoundException;
 import com.example.studentManagementSystem.mapper.StudentMapper;
 import com.example.studentManagementSystem.model.Student;
 import com.example.studentManagementSystem.repository.StudentRepository;
@@ -32,7 +33,7 @@ public class StudentServiceImp implements StudentService{
     @Override
 	public StudentDTO updateStudent(Long id, StudentDTO studentDTO) {
 		Student student = studentRepo.findById(id)
-				.orElseThrow(()->new RuntimeException("Student Not Found With id :"+id));
+				.orElseThrow(()->new ResourceNotFoundException("Student Not Found With id :"+id));
 		
 		student.setName(studentDTO.getName());
 		student.setEmail(studentDTO.getEmail());
@@ -45,7 +46,7 @@ public class StudentServiceImp implements StudentService{
 	@Override
 	public void deleteStudent(Long id) {
 		if(!studentRepo.existsById(id)){
-			throw new RuntimeException("Student Not Found With id :"+id);
+			throw new ResourceNotFoundException("Student Not Found With id :"+id);
 		}
 		studentRepo.deleteById(id);
 	}
@@ -54,7 +55,7 @@ public class StudentServiceImp implements StudentService{
 	public StudentDTO getStudentById(Long id) {
 			return studentRepo.findById(id)
 					.map(studentMapper::toDTO)
-					.orElseThrow(() -> new RuntimeException("Student not found with id: "+ id));
+					.orElseThrow(() -> new ResourceNotFoundException("Student not found with id: "+ id));
 	}
 	
 

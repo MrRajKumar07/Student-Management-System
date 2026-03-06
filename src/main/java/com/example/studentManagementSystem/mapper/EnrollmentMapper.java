@@ -13,8 +13,15 @@ public class EnrollmentMapper {
         if (enrollment == null) return null;
         EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
         enrollmentDTO.setId(enrollment.getId());
-        enrollmentDTO.setStudentId(enrollment.getStudentId());
-        enrollmentDTO.setCourseId(enrollment.getCourseId());
+        
+        if(enrollment.getStudent() != null) {
+        	enrollmentDTO.setStudentId(enrollment.getStudent().getId());
+        }
+        
+        if(enrollment.getCourse() != null) {
+        	enrollmentDTO.setCourseId(enrollment.getCourse().getId());
+        }
+        
         enrollmentDTO.setEnrollmentDate(enrollment.getEnrollmentDate());
         enrollmentDTO.setStatus(enrollment.getStatus());
         return enrollmentDTO;
@@ -25,8 +32,6 @@ public class EnrollmentMapper {
 
         Enrollment enrollment = new Enrollment();
         enrollment.setId(enrollmentDTO.getId());
-        enrollment.setStudentId(enrollmentDTO.getStudentId());
-        enrollment.setCourseId(enrollmentDTO.getCourseId());
         enrollment.setEnrollmentDate(enrollmentDTO.getEnrollmentDate());
         enrollment.setStatus(enrollmentDTO.getStatus());
         return enrollment;
