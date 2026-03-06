@@ -17,13 +17,17 @@ public class Enrollment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long studentId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "student_id", nullable = false)
+    private Student student;
 
-    private Long courseId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "course_id", nullable = false)
+    private Course course;
 
     private LocalDate enrollmentDate;
 
-    private String status;
+    private String status; // "ACTIVE", "COMPLETED", "DROPPED"
 
     @PrePersist
     protected void onCreate() {

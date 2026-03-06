@@ -4,13 +4,13 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "courses")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
 public class Course {
 
     @Id
@@ -21,12 +21,11 @@ public class Course {
     private String description;
     private Integer credits;
     private String duration;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
-    private LocalDateTime createdAt;
-
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = LocalDateTime.now();
-    }
+    // Access By Only Admin
+    @OneToMany(mappedBy="course",cascade = CascadeType.ALL)
+    private List<Enrollment> enrollments;
+    
 }
 
