@@ -3,10 +3,14 @@ package com.example.studentManagementSystem.controller;
 import com.example.studentManagementSystem.dto.CourseDTO;
 import com.example.studentManagementSystem.service.CourseService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-        import java.util.List;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/courses")
@@ -16,28 +20,34 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping
-    public CourseDTO createCourse(@RequestBody CourseDTO dto) {
-        return courseService.createCourse(dto);
+    public ResponseEntity<CourseDTO> createCourse(@Valid @RequestBody CourseDTO dto) {
+        CourseDTO course = courseService.createCourse(dto);
+        return new ResponseEntity<>(course, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public CourseDTO updateCourse(@PathVariable Long id,
-                                  @RequestBody CourseDTO courseDTO) {
-        return courseService.updateCourse(id, courseDTO);
+    public ResponseEntity<CourseDTO> updateCourse(
+            @PathVariable Long id,
+            @Valid @RequestBody CourseDTO dto) {
+
+        CourseDTO updated = courseService.updateCourse(id, dto);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCourse(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
+        return ResponseEntity.ok("Course deleted successfully");
     }
 
     @GetMapping("/{id}")
-    public CourseDTO getCourse(@PathVariable Long id) {
-        return courseService.getCourseById(id);
+    public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long id) {
+        CourseDTO course = courseService.getCourseById(id);
+        return ResponseEntity.ok(course);
     }
 
     @GetMapping
-    public List<CourseDTO> getAllCourses() {
-        return courseService.getAllCourses();
+    public ResponseEntity<List<CourseDTO>> getAllCourses() {
+        return ResponseEntity.ok(courseService.getAllCourses());
     }
 }

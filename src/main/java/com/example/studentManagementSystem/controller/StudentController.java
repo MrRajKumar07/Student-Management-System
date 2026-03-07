@@ -2,61 +2,56 @@ package com.example.studentManagementSystem.controller;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 import com.example.studentManagementSystem.dto.StudentDTO;
-import com.example.studentManagementSystem.model.Student;
 import com.example.studentManagementSystem.service.StudentService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/student")
+@RequestMapping("/api/students")
 public class StudentController {
 
-//	@Autowired
-//	StudentService studentService;
-
 	private final StudentService studentService;
-	
-	@GetMapping()
-	public String test() {
-		return "This is my First Api Testing";
+
+	@GetMapping
+	public ResponseEntity<String> test() {
+		return ResponseEntity.ok("This is my First Api Testing");
 	}
-	
+
 	@PostMapping("/save")
-	public StudentDTO addStudent(@RequestBody StudentDTO studentDTO) {
-		return studentService.createStudent(studentDTO);
+	public ResponseEntity<StudentDTO> addStudent(@RequestBody StudentDTO studentDTO) {
+		StudentDTO student = studentService.createStudent(studentDTO);
+		return new ResponseEntity<>(student, HttpStatus.CREATED);
 	}
-	
+
 	@PutMapping("/{id}")
-	public StudentDTO updateStudent(@PathVariable("id") Long id, @RequestBody StudentDTO studentDTO) {
-		return studentService.updateStudent(id, studentDTO);
+	public ResponseEntity<StudentDTO> updateStudent(
+			@PathVariable Long id,
+			@RequestBody StudentDTO studentDTO) {
+
+		StudentDTO updated = studentService.updateStudent(id, studentDTO);
+		return ResponseEntity.ok(updated);
 	}
 
 	@DeleteMapping("/delete/{id}")
-	public void deleteStudent(@PathVariable("id") Long id) {
+	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
 		studentService.deleteStudent(id);
+		return ResponseEntity.ok("Student deleted successfully");
 	}
-	
-	@GetMapping("/{id}")
-	public StudentDTO getStudentById(@PathVariable("id") Long id) {
-		return studentService.getStudentById(id);
-	}
-	
-	@GetMapping("/all")
-    public List<StudentDTO> getAllStudent() {
-    	return studentService.getAllStudent();
-    }
-}
 
-	
+	@GetMapping("/{id}")
+	public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id) {
+		StudentDTO student = studentService.getStudentById(id);
+		return ResponseEntity.ok(student);
+	}
+
+	@GetMapping("/all")
+	public ResponseEntity<List<StudentDTO>> getAllStudent() {
+		return ResponseEntity.ok(studentService.getAllStudent());
+	}
+}
