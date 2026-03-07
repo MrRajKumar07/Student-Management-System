@@ -1,15 +1,17 @@
 package com.example.studentManagementSystem.model;
 
-
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 @Data
 @Entity
 @Table(name = "enrollments")
+@AllArgsConstructor
+@NoArgsConstructor
 public class Enrollment {
 
 
