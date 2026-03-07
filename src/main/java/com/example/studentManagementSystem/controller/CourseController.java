@@ -1,5 +1,3 @@
-
-
 package com.example.studentManagementSystem.controller;
 
 import com.example.studentManagementSystem.dto.CourseDTO;
