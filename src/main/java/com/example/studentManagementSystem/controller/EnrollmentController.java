@@ -6,6 +6,7 @@ import com.example.studentManagementSystem.service.EnrollmentService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,7 @@ public class EnrollmentController {
             @Valid @RequestBody EnrollmentDTO request) {
 
         EnrollmentDTO enrollment = enrollmentService.enrollStudent(request);
-        return ResponseEntity.ok(enrollment);
+        return new ResponseEntity<>(enrollment, HttpStatus.CREATED);
     }
 
     @GetMapping("/student/{studentId}")
