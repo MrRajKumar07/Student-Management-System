@@ -2,44 +2,61 @@ package com.example.studentManagementSystem.controller;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
 import com.example.studentManagementSystem.dto.StudentDTO;
+import com.example.studentManagementSystem.model.Student;
 import com.example.studentManagementSystem.service.StudentService;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.web.bind.annotation.*;
-
 @RestController
-@RequestMapping("/api/students")
 @RequiredArgsConstructor
+@RequestMapping("/api/student")
 public class StudentController {
 
-	private final StudentService studentService;
+//	@Autowired
+//	StudentService studentService;
 
-	@PostMapping
-	public StudentDTO createStudent(@Valid @RequestBody StudentDTO studentDTO) {
+	private final StudentService studentService;
+	
+	@GetMapping()
+	public String test() {
+		return "This is my First Api Testing";
+	}
+	
+	@PostMapping("/save")
+	public StudentDTO addStudent(@RequestBody StudentDTO studentDTO) {
 		return studentService.createStudent(studentDTO);
 	}
-
+	
 	@PutMapping("/{id}")
-	public StudentDTO updateStudent(@PathVariable Long id,
-									@Valid @RequestBody StudentDTO studentDTO) {
+	public StudentDTO updateStudent(@PathVariable("id") Long id, @RequestBody StudentDTO studentDTO) {
 		return studentService.updateStudent(id, studentDTO);
 	}
 
-	@DeleteMapping("/{id}")
-	public void deleteStudent(@PathVariable Long id) {
+	@DeleteMapping("/delete/{id}")
+	public void deleteStudent(@PathVariable("id") Long id) {
 		studentService.deleteStudent(id);
 	}
-
+	
 	@GetMapping("/{id}")
-	public StudentDTO getStudentById(@PathVariable Long id) {
+	public StudentDTO getStudentById(@PathVariable("id") Long id) {
 		return studentService.getStudentById(id);
 	}
-
-	@GetMapping
-	public List<StudentDTO> getAllStudents() {
-		return studentService.getAllStudent();
-	}
+	
+	@GetMapping("/all")
+    public List<StudentDTO> getAllStudent() {
+    	return studentService.getAllStudent();
+    }
 }
+
+	
