@@ -29,6 +29,7 @@ public class Enrollment {
 
     private LocalDate enrollmentDate;
 
+    @Column(nullable = false)
     private String status; // "ACTIVE", "COMPLETED", "DROPPED"
 
     @PrePersist

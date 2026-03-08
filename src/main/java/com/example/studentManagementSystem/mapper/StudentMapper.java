@@ -11,6 +11,7 @@ public class StudentMapper {
 //	entity->Dto = fetching data from database and sending it to frontend 
 	public StudentDTO toDTO(Student student) {
 		if(student == null) return null;
+		
 		StudentDTO dto = new StudentDTO();
 		dto.setId(student.getId());
 		dto.setName(student.getName());
@@ -24,6 +25,7 @@ public class StudentMapper {
 //	dto->entity = Collect data from end user and send it database
 	public Student toEntity(StudentDTO dto) {
 		if(dto == null) return null;
+		
 		Student student = new Student();
 		student.setId(dto.getId());
 		student.setName(dto.getName());

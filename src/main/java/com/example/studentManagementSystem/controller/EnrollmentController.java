@@ -28,26 +28,19 @@ public class EnrollmentController {
     }
 
     @GetMapping("/student/{studentId}")
-    public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByStudentId(
-            @PathVariable Long studentId) {
+    public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByStudentId(@PathVariable Long studentId) {
 
-        return ResponseEntity.ok(
-                enrollmentService.getEnrollmentByStudent(studentId)
-        );
+        return ResponseEntity.ok(enrollmentService.getEnrollmentByStudent(studentId));
     }
 
     @GetMapping("/course/{courseId}")
-    public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByCourseId(
-            @PathVariable Long courseId) {
+    public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByCourseId(@PathVariable Long courseId) {
 
-        return ResponseEntity.ok(
-                enrollmentService.getEnrollmentByCourse(courseId)
-        );
+        return ResponseEntity.ok(enrollmentService.getEnrollmentByCourse(courseId));
     }
 
-    @PutMapping("/{id}/status")
-    public ResponseEntity<EnrollmentDTO> updateStatus(
-            @PathVariable Long id,
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<EnrollmentDTO> updateStatus(@PathVariable Long id,
             @RequestParam String status) {
 
         EnrollmentDTO updated = enrollmentService.updateEnrollmentStatus(id, status);

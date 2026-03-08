@@ -26,6 +26,10 @@ public class CourseDTO {
     @Max(value= 6, message ="Course cannot exceed 6 credits")
     private Integer credits;
     
+    @NotNull(message = "Course capacity is required")
+    @Min(value = 4, message = "Minimum capacity must be 4 Student")
+    private Integer capacity;
+    
     @NotBlank(message ="Duration is required (e.g., '4 Months')")
     private String duration; // duration e.g 4 Months or 4 Days or 4 Weeks
 }

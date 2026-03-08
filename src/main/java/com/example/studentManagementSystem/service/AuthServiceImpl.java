@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import com.example.studentManagementSystem.config.JwtUtil;
 import com.example.studentManagementSystem.dto.LoginDTO;
 import com.example.studentManagementSystem.dto.RegisterDTO;
+import com.example.studentManagementSystem.exception.ApiException;
 import com.example.studentManagementSystem.exception.ResourceNotFoundException;
 import com.example.studentManagementSystem.exception.UnauthorizedException;
 import com.example.studentManagementSystem.mapper.AuthMapper;
@@ -19,7 +20,7 @@ import lombok.RequiredArgsConstructor;
 @Service
 @RequiredArgsConstructor
 public class AuthServiceImpl implements AuthService {
-	
+
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -27,18 +28,20 @@ public class AuthServiceImpl implements AuthService {
     private final AuthMapper authMapper;
 
     @Override
-    public String registerUser(RegisterDTO registerDTO) {
-        // Convert DTO to Entity using your manual mapper
-        User user = authMapper.toEntity(registerDTO);
-        user.setPassword(passwordEncoder.encode(registerDTO.getPassword()));
-        
-        // 2. Fetch the Role entity based on the String in DTO
-        Role role = roleRepository.findByRoleName(registerDTO.getRoleName())
-                .orElseThrow(() -> new ResourceNotFoundException("Role: " + registerDTO.getRoleName() + " does not exist"));
+    public String registerUser(RegisterDTO dto) {
+        if (userRepository.existsByUsername(dto.getUsername())) {
+            throw new ApiException("Username '" + dto.getUsername() + "' is already taken.");
+        }
+
+        Role role = roleRepository.findByRoleName(dto.getRoleName())
+                .orElseThrow(() -> new ResourceNotFoundException("Role: " + dto.getRoleName() + " does not exist"));
+
+        User user = authMapper.toEntity(dto);
+        user.setPassword(passwordEncoder.encode(dto.getPassword()));
         user.setRole(role);
-        
+
         userRepository.save(user);
-        return "User registered successfully with role " + registerDTO.getRoleName();
+        return "User registered successfully with role " + dto.getRoleName();
     }
 
     @Override
