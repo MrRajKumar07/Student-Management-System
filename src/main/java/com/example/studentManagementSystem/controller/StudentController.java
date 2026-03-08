@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.studentManagementSystem.dto.StudentDTO;
 import com.example.studentManagementSystem.service.StudentService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
 @RestController
@@ -24,21 +26,23 @@ public class StudentController {
 	}
 
 	@PostMapping("/save")
-	public ResponseEntity<StudentDTO> addStudent(@RequestBody StudentDTO studentDTO) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<StudentDTO> addStudent(@Valid @RequestBody StudentDTO studentDTO) {
 		StudentDTO student = studentService.createStudent(studentDTO);
 		return new ResponseEntity<>(student, HttpStatus.CREATED);
 	}
 
 	@PutMapping("/{id}")
-	public ResponseEntity<StudentDTO> updateStudent(
-			@PathVariable Long id,
-			@RequestBody StudentDTO studentDTO) {
+	@PreAuthorize("hasRole('ADMIN')")
+	public ResponseEntity<StudentDTO> updateStudent(@PathVariable Long id,
+			@Valid @RequestBody StudentDTO studentDTO) {
 
 		StudentDTO updated = studentService.updateStudent(id, studentDTO);
 		return ResponseEntity.ok(updated);
 	}
 
 	@DeleteMapping("/delete/{id}")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
 		studentService.deleteStudent(id);
 		return ResponseEntity.ok("Student deleted successfully");

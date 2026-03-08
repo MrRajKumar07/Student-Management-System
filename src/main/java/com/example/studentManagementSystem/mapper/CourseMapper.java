@@ -11,12 +11,14 @@ public class CourseMapper {
 
     public CourseDTO toDTO(Course course) {
         if(course == null) return null;
+        
         CourseDTO dto = new CourseDTO();
         dto.setId(course.getId());
         dto.setCourseName(course.getCourseName());
         dto.setDescription(course.getDescription());
         dto.setCredits(course.getCredits());
         dto.setDuration(course.getDuration());
+        dto.setCapacity(course.getCapacity());
 
         return dto;
     }
@@ -24,12 +26,14 @@ public class CourseMapper {
 
     public Course toEntity(CourseDTO dto) {
         if(dto == null) return null;
+        
         Course course = new Course();
         course.setId(dto.getId());
         course.setCourseName(dto.getCourseName());
         course.setDescription(dto.getDescription());
         course.setCredits(dto.getCredits());
         course.setDuration(dto.getDuration());
+        course.setCapacity(dto.getCapacity());
 
         return course;
     }

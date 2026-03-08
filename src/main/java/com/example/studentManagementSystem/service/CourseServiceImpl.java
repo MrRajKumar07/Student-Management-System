@@ -1,15 +1,13 @@
 package com.example.studentManagementSystem.service;
 
-import com.example.studentManagementSystem.service.CourseService;
 import com.example.studentManagementSystem.dto.CourseDTO;
 import com.example.studentManagementSystem.exception.ResourceNotFoundException;
 import com.example.studentManagementSystem.mapper.CourseMapper;
 import com.example.studentManagementSystem.model.Course;
 import com.example.studentManagementSystem.repository.CourseRepository;
-//.
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -22,18 +20,16 @@ public class CourseServiceImpl implements CourseService {
     private final CourseMapper courseMapper;
 
     @Override
-
+    @Transactional
     public CourseDTO createCourse(CourseDTO dto) {
-
         Course course = courseMapper.toEntity(dto);
         Course saved = courseRepository.save(course);
-
         return courseMapper.toDTO(saved);
     }
 
     @Override
+    @Transactional
     public CourseDTO updateCourse(Long id, CourseDTO dto) {
-
         Course existing = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
 
@@ -41,32 +37,30 @@ public class CourseServiceImpl implements CourseService {
         existing.setDescription(dto.getDescription());
         existing.setCredits(dto.getCredits());
         existing.setDuration(dto.getDuration());
+        existing.setCapacity(dto.getCapacity());
 
         Course updated = courseRepository.save(existing);
-
         return courseMapper.toDTO(updated);
     }
 
     @Override
+    @Transactional
     public void deleteCourse(Long id) {
-    	if(!courseRepository.existsById(id)){
-			throw new ResourceNotFoundException("Course Not Found");
-		}
-    	courseRepository.deleteById(id);
+        if (!courseRepository.existsById(id)) {
+            throw new ResourceNotFoundException("Course Not Found");
+        }
+        courseRepository.deleteById(id);
     }
 
     @Override
     public CourseDTO getCourseById(Long id) {
-
         Course course = courseRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Course not found"));
-
         return courseMapper.toDTO(course);
     }
 
     @Override
     public List<CourseDTO> getAllCourses() {
-
         return courseRepository.findAll()
                 .stream()
                 .map(courseMapper::toDTO)

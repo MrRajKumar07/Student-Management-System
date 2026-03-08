@@ -26,17 +26,18 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     
-    @Column(unique=true,nullable=false)
+    @Column(unique = true, nullable = false)
     private String username;
     
     @Column(nullable=false)
     private String password;
     
+    @Column(unique = true, nullable = false)
     private String email;
     
     //oneToOne, oneTomany, ManyToOne, ManyToMany
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "role_id")
+    @JoinColumn(name = "role_id", nullable = false)
     private Role role; //student and admin
     
     @OneToOne(cascade= CascadeType.ALL)

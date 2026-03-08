@@ -33,14 +33,16 @@ public class Student {
 	@Column(unique= true, nullable=false)
 	private String email;
 	
+	@Column(unique= true, nullable=false)
 	private String phone;
+	
 	private String department;
 	
 	@Column(name="created_at")
 	private LocalDateTime createdAt= LocalDateTime.now();
 	
 	//Access by both student and Admin but edited By only Admin
-	@OneToMany(mappedBy="student",cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy="student", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	private List<Enrollment> enrollments;
 	
 }

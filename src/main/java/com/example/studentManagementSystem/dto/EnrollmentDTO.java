@@ -24,7 +24,7 @@ public class EnrollmentDTO {
     private LocalDate enrollmentDate;
 	
 	@NotBlank(message="status is required")
-	@Pattern(regexp ="^(ACTIVE||COMPLETED||DROPPED)$", message="Status must be ACTIVE, COMPLETED or DROPPED")
+	@Pattern(regexp ="^(ACTIVE|COMPLETED|DROPPED)$", message="Status must be ACTIVE, COMPLETED or DROPPED")
     private String status;
 
 }

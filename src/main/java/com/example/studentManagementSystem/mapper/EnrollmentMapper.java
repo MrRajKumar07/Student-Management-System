@@ -11,6 +11,7 @@ public class EnrollmentMapper {
 
     public EnrollmentDTO toDTO(Enrollment enrollment) {
         if (enrollment == null) return null;
+        
         EnrollmentDTO enrollmentDTO = new EnrollmentDTO();
         enrollmentDTO.setId(enrollment.getId());
         

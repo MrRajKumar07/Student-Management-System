@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,14 +21,15 @@ public class CourseController {
     private final CourseService courseService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CourseDTO> createCourse(@Valid @RequestBody CourseDTO dto) {
         CourseDTO course = courseService.createCourse(dto);
         return new ResponseEntity<>(course, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CourseDTO> updateCourse(
-            @PathVariable Long id,
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id,
             @Valid @RequestBody CourseDTO dto) {
 
         CourseDTO updated = courseService.updateCourse(id, dto);
@@ -35,6 +37,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> deleteCourse(@PathVariable Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.ok("Course deleted successfully");

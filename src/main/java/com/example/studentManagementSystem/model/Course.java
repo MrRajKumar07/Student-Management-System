@@ -17,10 +17,16 @@ public class Course {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(unique = true, nullable = false)
     private String courseName;
+    
     private String description;
     private Integer credits;
     private String duration;
+    
+    @Column(nullable = false)
+    private Integer capacity;
+    
     private LocalDateTime createdAt = LocalDateTime.now();
 
     // Access By Only Admin
