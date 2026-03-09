@@ -49,12 +49,14 @@ public class StudentController {
 	}
 
 	@GetMapping("/{id}")
+	@PreAuthorize("hasRole('ADMIN','STUDENT')")
 	public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id) {
 		StudentDTO student = studentService.getStudentById(id);
 		return ResponseEntity.ok(student);
 	}
 
 	@GetMapping("/all")
+	@PreAuthorize("hasRole('ADMIN')")
 	public ResponseEntity<List<StudentDTO>> getAllStudent() {
 		return ResponseEntity.ok(studentService.getAllStudent());
 	}

@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMIN','STUDENT')")
     public ResponseEntity<EnrollmentDTO> enrollStudent(
             @Valid @RequestBody EnrollmentDTO request) {
 
@@ -28,18 +30,21 @@ public class EnrollmentController {
     }
 
     @GetMapping("/student/{studentId}")
+    @PreAuthorize("hasRole('ADMIN','STUDENT')")
     public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByStudentId(@PathVariable Long studentId) {
 
         return ResponseEntity.ok(enrollmentService.getEnrollmentByStudent(studentId));
     }
 
     @GetMapping("/course/{courseId}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByCourseId(@PathVariable Long courseId) {
 
         return ResponseEntity.ok(enrollmentService.getEnrollmentByCourse(courseId));
     }
 
     @PatchMapping("/{id}/status")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EnrollmentDTO> updateStatus(@PathVariable Long id,
             @RequestParam String status) {
 
