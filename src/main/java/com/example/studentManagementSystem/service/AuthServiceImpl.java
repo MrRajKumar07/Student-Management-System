@@ -14,7 +14,6 @@ import com.example.studentManagementSystem.model.Role;
 import com.example.studentManagementSystem.model.User;
 import com.example.studentManagementSystem.repository.RoleRepository;
 import com.example.studentManagementSystem.repository.UserRepository;
-
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -50,7 +49,8 @@ public class AuthServiceImpl implements AuthService {
                 .orElseThrow(() -> new ResourceNotFoundException("Invalid username"));
         
         if (passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
-            return jwtUtil.generateToken(user.getUsername());
+            // Updated to pass the role name to the token generator
+            return jwtUtil.generateToken(user.getUsername(), user.getRole().getRoleName());
         }
         throw new UnauthorizedException("Invalid password credentials");
     }
