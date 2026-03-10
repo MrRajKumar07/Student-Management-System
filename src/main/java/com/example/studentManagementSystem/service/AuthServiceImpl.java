@@ -28,8 +28,13 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public String registerUser(RegisterDTO dto) {
+    	
         if (userRepository.existsByUsername(dto.getUsername())) {
             throw new ApiException("Username '" + dto.getUsername() + "' is already taken.");
+        }
+        
+        if (userRepository.existsByEmail(dto.getEmail())) {
+            throw new ApiException("Email '" + dto.getEmail() + "' is already registered.");
         }
 
         Role role = roleRepository.findByRoleName(dto.getRoleName())

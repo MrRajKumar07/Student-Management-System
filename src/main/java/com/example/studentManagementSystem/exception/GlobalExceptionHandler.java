@@ -3,6 +3,7 @@ package com.example.studentManagementSystem.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -22,6 +23,23 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<Map<String, Object>> handleDataIntegrity(DataIntegrityViolationException ex) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("timestamp", LocalDateTime.now());
+        body.put("status", HttpStatus.BAD_REQUEST.value());
+        
+        String message = "Database error: A record with this information already exists.";
+        if (ex.getMostSpecificCause().getMessage().contains("email")) {
+            message = "This email address is already registered.";
+        } else if (ex.getMostSpecificCause().getMessage().contains("username")) {
+            message = "This username is already taken.";
+        }
+        
+        body.put("message", message);
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
+    }
+    
     @ExceptionHandler(ApiException.class)
     public ResponseEntity<Map<String, Object>> handleApiException(ApiException ex) {
         Map<String, Object> body = new HashMap<>();

@@ -21,32 +21,31 @@ public class EnrollmentController {
     private final EnrollmentService enrollmentService;
 
     @PostMapping
-    @PreAuthorize("hasRole('ADMIN','STUDENT')")
-    public ResponseEntity<EnrollmentDTO> enrollStudent(
-            @Valid @RequestBody EnrollmentDTO request) {
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
+    public ResponseEntity<EnrollmentDTO> enrollStudent(@Valid @RequestBody EnrollmentDTO request) {
 
         EnrollmentDTO enrollment = enrollmentService.enrollStudent(request);
         return new ResponseEntity<>(enrollment, HttpStatus.CREATED);
     }
 
     @GetMapping("/student/{studentId}")
-    @PreAuthorize("hasRole('ADMIN','STUDENT')")
-    public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByStudentId(@PathVariable Long studentId) {
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
+    public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByStudentId(@PathVariable("studentId") Long studentId) {
 
         return ResponseEntity.ok(enrollmentService.getEnrollmentByStudent(studentId));
     }
 
     @GetMapping("/course/{courseId}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByCourseId(@PathVariable Long courseId) {
+    public ResponseEntity<List<EnrollmentDTO>> getEnrollmentsByCourseId(@PathVariable("courseId") Long courseId) {
 
         return ResponseEntity.ok(enrollmentService.getEnrollmentByCourse(courseId));
     }
 
     @PatchMapping("/{id}/status")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<EnrollmentDTO> updateStatus(@PathVariable Long id,
-            @RequestParam String status) {
+    public ResponseEntity<EnrollmentDTO> updateStatus(@PathVariable("id") Long id,
+            @RequestParam("status") String status) {
 
         EnrollmentDTO updated = enrollmentService.updateEnrollmentStatus(id, status);
         return ResponseEntity.ok(updated);

@@ -34,7 +34,7 @@ public class StudentController {
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<StudentDTO> updateStudent(@PathVariable Long id,
+	public ResponseEntity<StudentDTO> updateStudent(@PathVariable("id") Long id,
 			@Valid @RequestBody StudentDTO studentDTO) {
 
 		StudentDTO updated = studentService.updateStudent(id, studentDTO);
@@ -43,14 +43,14 @@ public class StudentController {
 
 	@DeleteMapping("/delete/{id}")
 	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<String> deleteStudent(@PathVariable Long id) {
+	public ResponseEntity<String> deleteStudent(@PathVariable("id") Long id) {
 		studentService.deleteStudent(id);
 		return ResponseEntity.ok("Student deleted successfully");
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ADMIN','STUDENT')")
-	public ResponseEntity<StudentDTO> getStudentById(@PathVariable Long id) {
+	@PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
+	public ResponseEntity<StudentDTO> getStudentById(@PathVariable("id") Long id) {
 		StudentDTO student = studentService.getStudentById(id);
 		return ResponseEntity.ok(student);
 	}
