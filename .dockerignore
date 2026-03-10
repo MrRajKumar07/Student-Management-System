@@ -1,0 +1,13 @@
+target/
+*.jar
+*.war
+.settings/
+.project
+.classpath
+.metadata/
+bin/
+.idea/
+*.iml
+.git
+.gitignore
+HELP.md
