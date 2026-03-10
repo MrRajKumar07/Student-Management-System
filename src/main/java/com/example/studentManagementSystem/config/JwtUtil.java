@@ -2,8 +2,6 @@ package com.example.studentManagementSystem.config;
 
 import java.security.Key;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import org.springframework.stereotype.Component;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -11,19 +9,16 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
+    // 32-character secret key for HS256
     private final String SECRET_STRING = "my_very_secret_key_32_characters_long_minimum_12345";
     private final Key key = Keys.hmacShaKeyFor(SECRET_STRING.getBytes());
 
-    // Updated to accept the role name
     public String generateToken(String username, String role) {
-        Map<String, Object> claims = new HashMap<>();
-        claims.put("role", role); // Store the role in the token
-
         return Jwts.builder()
-                .setClaims(claims)
                 .setSubject(username)
+                .claim("role", role) // This adds the role without deleting the subject
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) 
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24)) // 24 Hours
                 .signWith(key, SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -51,6 +46,8 @@ public class JwtUtil {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (Exception e) {
+            // It's better to log this for debugging during your hackathon
+            System.out.println("JWT Validation Error: " + e.getMessage());
             return false;
         }
     }

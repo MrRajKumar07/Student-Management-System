@@ -29,7 +29,7 @@ public class CourseController {
 
     @PutMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<CourseDTO> updateCourse(@PathVariable Long id,
+    public ResponseEntity<CourseDTO> updateCourse(@PathVariable("id") Long id,
             @Valid @RequestBody CourseDTO dto) {
 
         CourseDTO updated = courseService.updateCourse(id, dto);
@@ -38,20 +38,20 @@ public class CourseController {
 
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<String> deleteCourse(@PathVariable Long id) {
+    public ResponseEntity<String> deleteCourse(@PathVariable("id") Long id) {
         courseService.deleteCourse(id);
         return ResponseEntity.ok("Course deleted successfully");
     }
 
     @GetMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN','STUDENT')")
-    public ResponseEntity<CourseDTO> getCourseById(@PathVariable Long id) {
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
+    public ResponseEntity<CourseDTO> getCourseById(@PathVariable("id") Long id) {
         CourseDTO course = courseService.getCourseById(id);
         return ResponseEntity.ok(course);
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN','STUDENT')")
+    @PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
     public ResponseEntity<List<CourseDTO>> getAllCourses() {
         return ResponseEntity.ok(courseService.getAllCourses());
     }

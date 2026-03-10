@@ -1,29 +1,59 @@
 package com.example.studentManagementSystem.service;
 
 import java.util.List;
+import java.util.Optional;
+
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.example.studentManagementSystem.dto.StudentDTO;
 import com.example.studentManagementSystem.exception.ResourceNotFoundException;
 import com.example.studentManagementSystem.mapper.StudentMapper;
+import com.example.studentManagementSystem.model.Role;
 import com.example.studentManagementSystem.model.Student;
+import com.example.studentManagementSystem.model.User;
+import com.example.studentManagementSystem.repository.RoleRepository;
 import com.example.studentManagementSystem.repository.StudentRepository;
+import com.example.studentManagementSystem.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
 public class StudentServiceImp implements StudentService {
 
-    private final StudentRepository studentRepo;
+	private final StudentRepository studentRepo;
+    private final UserRepository userRepository;
+    private final RoleRepository roleRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
     private final StudentMapper studentMapper;
 
     @Override
     @Transactional
     public StudentDTO createStudent(StudentDTO studentDTO) {
         Student student = studentMapper.toEntity(studentDTO);
-        Student saveStudent = studentRepo.save(student);
-        return studentMapper.toDTO(saveStudent);
+        Student savedStudent = studentRepo.save(student);
+
+        Optional<User> existingUser = userRepository.findByEmail(studentDTO.getEmail());
+        
+        User user;
+        if (existingUser.isPresent()) {
+            user = existingUser.get();
+        } else {
+            user = new User();
+            user.setUsername(studentDTO.getEmail()); 
+            user.setEmail(studentDTO.getEmail());
+            user.setPassword(passwordEncoder.encode("Student@123"));
+            
+            Role studentRole = roleRepository.findByRoleName("STUDENT")
+                .orElseThrow(() -> new ResourceNotFoundException("Role STUDENT not found"));
+            user.setRole(studentRole);
+        }
+        user.setStudent(savedStudent); 
+        userRepository.save(user);
+
+        return studentMapper.toDTO(savedStudent);
     }
     
     @Override
