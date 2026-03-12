@@ -69,15 +69,6 @@ public class StudentServiceImp implements StudentService {
         
         return studentMapper.toDTO(studentRepo.save(student));
     }
-
-    @Override
-    @Transactional
-    public void deleteStudent(Long id) {
-        if (!studentRepo.existsById(id)) {
-            throw new ResourceNotFoundException("Student Not Found With id :" + id);
-        }
-        studentRepo.deleteById(id);
-    }
     
     @Override
     public StudentDTO getStudentById(Long id) {

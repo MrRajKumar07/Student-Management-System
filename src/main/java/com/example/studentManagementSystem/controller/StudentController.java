@@ -41,13 +41,6 @@ public class StudentController {
 		return ResponseEntity.ok(updated);
 	}
 
-	@DeleteMapping("/delete/{id}")
-	@PreAuthorize("hasRole('ADMIN')")
-	public ResponseEntity<String> deleteStudent(@PathVariable("id") Long id) {
-		studentService.deleteStudent(id);
-		return ResponseEntity.ok("Student deleted successfully");
-	}
-
 	@GetMapping("/{id}")
 	@PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
 	public ResponseEntity<StudentDTO> getStudentById(@PathVariable("id") Long id) {
